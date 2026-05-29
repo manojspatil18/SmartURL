@@ -1,7 +1,7 @@
 # ===================================================================
 # STAGE 1: Build the Spring Boot Application
 # ===================================================================
-FROM maven:3.8.5-openjdk-17 AS build
+FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy pom.xml and stage dependency downloads
@@ -15,7 +15,7 @@ RUN mvn clean package -DskipTests
 # ===================================================================
 # STAGE 2: Run the compiled JAR in a lightweight JRE
 # ===================================================================
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy the compiled JAR file from the builder stage
