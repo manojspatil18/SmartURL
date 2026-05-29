@@ -24,19 +24,23 @@ try {
     $resolveRes = Invoke-WebRequest -Uri "$BASE_URL/$shortCode" -MaximumRedirection 0 -ErrorAction SilentlyContinue -UseBasicParsing
     Write-Host "[STATUS] HTTP $($resolveRes.StatusCode) Redirect Checked" -ForegroundColor Green
     
-    # Test 3: Check analytics
-    Write-Host "`n➡️ TEST 3: Fetching analytics details..." -ForegroundColor Yellow
+    # Test 3: Check REST analytics data
+    Write-Host "`n➡️ TEST 3: Fetching REST analytics details..." -ForegroundColor Yellow
     $analyticsRes = Invoke-RestMethod -Uri "$BASE_URL/analytics/$shortCode" -Method Get
     Write-Host "[STATUS] Success" -ForegroundColor Green
     Write-Host "[BODY] Click count (should be 1): $($analyticsRes.clickCount)"
-    Write-Host "[BODY] Created At: $($analyticsRes.createdAt)"
 
     if ($analyticsRes.clickCount -ne 1) {
         throw "Analytics tracking failed: click count is $($analyticsRes.clickCount) instead of 1"
     }
 
-    # Test 4: Batch retrieval for LocalStorage Dashboard
-    Write-Host "`n➡️ TEST 4: Performing dashboard batch synchronization..." -ForegroundColor Yellow
+    # Test 4: Check Web View rendering (Thymeleaf Template)
+    Write-Host "`n➡️ TEST 4: Fetching Analytics Web Page (renders analytics.html)..." -ForegroundColor Yellow
+    $webPageRes = Invoke-WebRequest -Uri "$BASE_URL/stats/$shortCode" -Method Get -UseBasicParsing
+    Write-Host "[STATUS] HTTP $($webPageRes.StatusCode) Success (Template rendered successfully without 500 error)" -ForegroundColor Green
+
+    # Test 5: Batch retrieval for LocalStorage Dashboard
+    Write-Host "`n➡️ TEST 5: Performing dashboard batch synchronization..." -ForegroundColor Yellow
     $codes = @($shortCode, "non-existent-code") | ConvertTo-Json
     $batchRes = Invoke-RestMethod -Uri "$BASE_URL/api/my-urls" -Method Post -Body $codes -ContentType "application/json"
     Write-Host "[STATUS] Success" -ForegroundColor Green
@@ -46,14 +50,14 @@ try {
         throw "Dashboard sync failed"
     }
 
-    # Test 5: Delete URL
-    Write-Host "`n➡️ TEST 5: Deleting shortened URL..." -ForegroundColor Yellow
+    # Test 6: Delete URL
+    Write-Host "`n➡️ TEST 6: Deleting shortened URL..." -ForegroundColor Yellow
     $deleteRes = Invoke-RestMethod -Uri "$BASE_URL/delete/$id" -Method Delete
     Write-Host "[STATUS] Success" -ForegroundColor Green
     Write-Host "[BODY] Message: $($deleteRes.message)"
 
-    # Test 6: Verify deletion
-    Write-Host "`n➡️ TEST 6: Verifying deletion..." -ForegroundColor Yellow
+    # Test 7: Verify deletion
+    Write-Host "`n➡️ TEST 7: Verifying deletion..." -ForegroundColor Yellow
     try {
         $verifyRes = Invoke-WebRequest -Uri "$BASE_URL/analytics/$shortCode" -Method Get -ErrorAction Stop -UseBasicParsing
         throw "Expected 404 error but got 200"
@@ -66,7 +70,7 @@ try {
         }
     }
 
-    Write-Host "`n🎉 ALL BACKEND API INTEGRATION TESTS PASSED SUCCESSFULLY!" -ForegroundColor Green
+    Write-Host "`n🎉 ALL BACKEND API & VIEW TEMPLATE TESTS PASSED SUCCESSFULLY!" -ForegroundColor Green
 
 } catch {
     Write-Host "`n❌ TEST SUITE FAILED: $_" -ForegroundColor Red
