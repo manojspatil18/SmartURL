@@ -79,7 +79,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="glass-form-label text-muted uppercase small tracking-wider">Short URL</label>
                             <div class="d-flex align-items-center gap-2">
-                                <a th:href="@{'/' + ${url.shortCode}}" target="_blank" id="targetShortUrl" class="short-url-link fs-5" th:text="@{${#httpServletRequest.requestURL.substring(0, #httpServletRequest.requestURL.indexOf(#httpServletRequest.requestURI))} + '/' + ${url.shortCode}}">https://smarturl/code</a>
+                                <a th:href="@{'/' + ${url.shortCode}}" target="_blank" id="targetShortUrl" class="short-url-link fs-5">https://smarturl/code</a>
                                 <button class="action-btn ms-2" onclick="copyShortUrl(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy URL">
                                     <i class="far fa-copy"></i>
                                 </button>
@@ -212,7 +212,18 @@
         /*<![CDATA[*/
         const totalClicks = /*[[${url.clickCount}]]*/ 0;
         const creationDateString = /*[[${url.createdAt}]]*/ '';
+        const shortCode = /*[[${url.shortCode}]]*/ '';
         /*]]>*/
+
+        // Populate absolute short URL dynamically on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const targetShortUrl = document.getElementById("targetShortUrl");
+            if (targetShortUrl) {
+                const fullUrl = window.location.origin + '/' + shortCode;
+                targetShortUrl.innerText = fullUrl;
+                targetShortUrl.href = fullUrl;
+            }
+        });
 
         // Copy url action helper
         function copyShortUrl(btn) {
