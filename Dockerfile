@@ -22,7 +22,7 @@ WORKDIR /app
 COPY --from=build /app/target/url-shortener-1.0.0.jar app.jar
 
 # Expose standard web server port
-EXPOSE 8080
+EXPOSE 10000
 
 # Launch the Spring Boot Web Server
 ENTRYPOINT ["java", "-jar", "app.jar"]
