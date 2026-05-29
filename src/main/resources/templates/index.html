@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart URL Shortener - T.LY Premium Link Manager</title>
+    
+    <!-- Meta tags for premium SEO -->
+    <meta name="description" content="Convert long unreadable URLs into short, fast, and clean links. Track clicks, view real-time charts, download QR codes, and customize aliases for free.">
+    <meta name="keywords" content="url shortener, link shortener, bitly alternative, free url shortener, smart url, qr code generator, custom alias links, click tracking analytics">
+    <meta name="author" content="Smart URL System">
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- FontAwesome 6 Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Dynamic Floating Background Orbs -->
+    <div class="bg-orb-1"></div>
+    <div class="bg-orb-2"></div>
+
+    <!-- ===================================================================
+         PREMIUM NAVIGATION BAR
+         =================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-link me-2 text-primary"></i>
+                <span>Smart<span class="text-white">URL</span></span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <a href="#dashboardSection" class="nav-link text-secondary">
+                    <i class="fas fa-list-ul me-1"></i> My Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================================================================
+         HERO SECTION WITH SHORTENER FORM
+         =================================================================== -->
+    <header class="container text-center mt-5 pt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Main Header Branding -->
+                <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill mb-3 fw-semibold">
+                    <i class="fas fa-sparkles me-1 text-warning"></i> Unlimited Free URL Shortener
+                </span>
+                <h1 class="hero-title">
+                    Shorten, Customize and <br>
+                    <span class="hero-gradient-text">Track Your Links</span> Instantly
+                </h1>
+                <p class="hero-subtitle">
+                    Create shortened URLs with custom aliases and real-time click tracking. Free forever, no login required.
+                </p>
+
+                <!-- Dynamic Server-Side Error Banner (Thymeleaf Exception Fallback) -->
+                <div th:if="${errorMessage}" class="alert alert-danger glass-card border border-danger border-opacity-20 d-flex align-items-center text-start p-3 mb-4 show fade shadow-lg" role="alert">
+                    <i class="fas fa-exclamation-triangle fs-4 text-danger me-3"></i>
+                    <div>
+                        <h6 class="alert-heading fw-bold mb-0 text-white">Oops! Connection Issue</h6>
+                        <span th:text="${errorMessage}" class="text-white-50 small">Error detail</span>
+                    </div>
+                </div>
+
+                <!-- Core Glassmorphic Shortener Form -->
+                <div class="glass-card mb-5 text-start">
+                    <form id="shortenForm">
+                        <div class="glass-input-group mb-2">
+                            <i class="fas fa-link text-muted fs-5 ms-3"></i>
+                            <input type="url" id="originalUrl" class="glass-control form-control" placeholder="Paste your long, messy link here..." required autocomplete="off">
+                            <button type="submit" class="btn-premium d-flex align-items-center justify-content-center">
+                                <span>Shorten URL</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Toggle for Optional Advanced Configurations -->
+                        <a href="#" class="options-toggler" id="advancedOptionsToggle">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>Configure Custom Alias & Expiration</span>
+                        </a>
+
+                        <!-- Advanced Configurations Drawer (Initially Hidden) -->
+                        <div class="mt-4 pt-3 border-top border-secondary border-opacity-10" id="advancedOptionsContainer" style="display: none;">
+                            <div class="row g-3">
+                                <!-- Custom Short Code Alias input -->
+                                <div class="col-md-6 text-start">
+                                    <label for="customAlias" class="glass-form-label">
+                                        <i class="fas fa-pen-nib me-1"></i> Custom Alias (Optional)
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark bg-opacity-20 border-secondary border-opacity-15 text-muted small">smarturl/</span>
+                                        <input type="text" id="customAlias" class="glass-form-control form-control" placeholder="my-branding" autocomplete="off">
+                                    </div>
+                                    <small class="text-muted d-block mt-1">Letters, numbers, hyphens, and underscores allowed.</small>
+                                </div>
+                                
+                                <!-- Expiry Date/Time picker -->
+                                <div class="col-md-6 text-start">
+                                    <label for="expiryDate" class="glass-form-label">
+                                        <i class="fas fa-calendar-alt me-1"></i> Link Expiry Date (Optional)
+                                    </label>
+                                    <input type="datetime-local" id="expiryDate" class="glass-form-control form-control">
+                                    <small class="text-muted d-block mt-1">Link will redirect to home once this timestamp passes.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- ===================================================================
+         DYNAMIC USER LINKS DASHBOARD SECTION
+         =================================================================== -->
+    <main class="container my-5 pb-5" id="dashboardSection">
+        <div class="row">
+            <div class="col-12">
+                <div class="glass-card">
+                    <!-- Dashboard Header & Search bar -->
+                    <div class="row align-items-center mb-4 g-3">
+                        <div class="col-md-6">
+                            <h2 class="h3 mb-1 text-white d-flex align-items-center">
+                                <i class="fas fa-cubes text-primary me-2"></i> My Shortened Links
+                            </h2>
+                            <p class="text-muted mb-0 small">Locally managed list of URLs shortened in this browser session.</p>
+                        </div>
+                        <!-- Client-Side Search Filter Bar -->
+                        <div class="col-md-6">
+                            <div class="search-input-group">
+                                <i class="fas fa-search text-muted ms-3"></i>
+                                <input type="text" id="searchBar" class="search-control form-control" placeholder="Search saved links...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder Empty Dashboard State (if no URLs created yet) -->
+                    <div class="text-center py-5 my-3" id="emptyStateContainer" style="display: none;">
+                        <div class="bg-primary bg-opacity-10 text-primary border border-primary border-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-link-slash fs-2"></i>
+                        </div>
+                        <h4 class="text-white fw-bold mb-2">No links generated yet</h4>
+                        <p class="text-muted mx-auto mb-4" style="max-width: 420px;">
+                            All the links you shorten will be saved right here in your browser, keeping your workflow private and extremely organized. Start shortening now!
+                        </p>
+                        <button onclick="document.getElementById('originalUrl').focus()" class="btn btn-outline-primary rounded-pill px-4">
+                            <i class="fas fa-plus me-2"></i>Shorten First Link
+                        </button>
+                    </div>
+
+                    <!-- Live Dynamic Sync Table Container -->
+                    <div id="tableContainerMain" style="display: none;">
+                        <div class="custom-table-container">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Short Link</th>
+                                        <th scope="col">Original Destination</th>
+                                        <th scope="col" class="text-center">Clicks</th>
+                                        <th scope="col">Created On</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="text-nowrap">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="urlTableBody">
+                                    <!-- Populated dynamically via main.js from localStorage and DB api sync -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===================================================================
+         PREMIUM DOWNLOADABLE QR CODE MODAL
+         =================================================================== -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header border-0 pb-0 justify-content-end">
+                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body pb-4">
+                    <h3 class="modal-title mb-1 text-white" id="qrModalTitle">QR Code</h3>
+                    <p class="text-secondary small mb-4">Scan the code below to open the redirect target on your mobile browser.</p>
+                    
+                    <!-- QR Target Box (rendered client-side dynamically) -->
+                    <div class="qr-container my-3 mx-auto shadow-lg">
+                        <div id="qrcode"></div>
+                    </div>
+                    
+                    <p class="text-muted small mt-3 mx-auto" style="max-width: 320px;">
+                        This high-resolution QR image can be printed or shared digitally to drive mobile engagement.
+                    </p>
+                </div>
+                <div class="modal-footer border-0 pt-0 justify-content-center gap-2">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4 py-2" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-premium rounded-pill px-4 py-2" id="btnDownloadQr">
+                        <i class="fas fa-download me-2"></i>Download PNG
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         ALL-SCREEN FLOATING NAVIGATION DOCK
+         =================================================================== -->
+    <div class="floating-nav px-4 py-2">
+        <a href="/" class="text-decoration-none fw-bold fs-5 me-2" style="background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif; letter-spacing: -0.5px;">
+            SmartURl
+        </a>
+        <div class="floating-theme-toggle border-start border-secondary border-opacity-25 ps-3 ms-2">
+            <button class="floating-nav-btn" id="themeToggleBtn" aria-label="Toggle Theme" data-bs-toggle="tooltip" data-bs-placement="top" title="Switch Theme">
+                <i class="fas fa-sun"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================================================================
+         FLOATING DYNAMIC TOAST NOTIFICATION ROOT
+         =================================================================== -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1100;">
+        <!-- Injecting programmatically in main.js -->
+    </div>
+
+    <!-- ===================================================================
+         PREMIUM SYSTEM FOOTER
+         =================================================================== -->
+    <footer class="text-center py-4 mt-auto">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6 text-md-start">
+                    <p class="mb-0 small">&copy; 2026 SmartURl</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="https://github.com" target="_blank" class="text-secondary"><i class="fab fa-github fs-5"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================================================================
+         LIBRARIES & SCRIPTS
+         =================================================================== -->
+    <!-- Bootstrap 5 JS Bundle (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- QRCode.js Library (CDN) - Required for high-performance canvas-based client-side generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nOMdBm48LkWIgAlQR3gIiEcJaXXUsFJbfVJ1tJa8QsTtsW3G4a16sUL9cYXQI5t5ph4wy5Hs4h8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Custom Application Interactivity Script -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

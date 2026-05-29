@@ -1,0 +1,52 @@
+# ===================================================================
+# MAVEN & BUILD CACHES
+# ===================================================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.nextValuations
+pom.xml.releaseBackup
+release.properties
+dependency-reduced-pom.xml
+build.log
+.gradle/
+build/
+
+# ===================================================================
+# PRIVATE LOCAL TOOLS (Private local Maven binary zip/folder)
+# ===================================================================
+maven/
+maven.zip
+*.jar
+*.war
+*.zip
+*.msi
+
+# ===================================================================
+# IDE CONFIGURATIONS (Eclipse / IntelliJ)
+# ===================================================================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+.metadata/
+.springBeans
+
+# ===================================================================
+# OPERATING SYSTEM TEMP FILES
+# ===================================================================
+[Dd]esktop.ini
+Thumbs.db
+.DS_Store
+
+# ===================================================================
+# LOGGING
+# ===================================================================
+*.log
+logs/
