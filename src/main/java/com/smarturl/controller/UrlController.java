@@ -41,6 +41,13 @@ public class UrlController {
      */
     @GetMapping("/{shortCode}")
     public String redirectUrl(@PathVariable("shortCode") String shortCode) {
+        // Safeguard: Ignore background static assets requests (favicon, style, scripts)
+        if (shortCode == null || shortCode.contains(".") || 
+            "favicon.ico".equalsIgnoreCase(shortCode) || 
+            "error".equalsIgnoreCase(shortCode)) {
+            return "forward:/error"; // Let Spring Boot handle static resources or standard 404 naturally
+        }
+
         try {
             String originalUrl = urlService.resolveAndTrack(shortCode);
             return "redirect:" + originalUrl;
